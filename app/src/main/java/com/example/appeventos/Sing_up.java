@@ -1,5 +1,8 @@
 package com.example.appeventos;
 
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +36,18 @@ public class Sing_up extends AppCompatActivity {
 		EdtPass = findViewById(R.id.edtSenhaConf);
 		EdtPass2 = findViewById(R.id.EdtSenha);
 
+
+		EdtEmail.setOnFocusChangeListener((v, hasFocus) -> {
+					if (hasFocus) {
+						EdtEmail.setHint("");
+					} else {
+						if (EdtEmail.getText().toString().trim().isEmpty()) {
+							EdtEmail.setHint("Email");
+
+						}
+					}
+				});
+
 		button.setOnClickListener(v -> {
 			String email = EdtEmail.getText().toString().trim();
 			String password = EdtPass.getText().toString().trim();
@@ -51,7 +66,12 @@ public class Sing_up extends AppCompatActivity {
 			// Here, you would add logic to save the user data (e.g., to a database or shared preferences)
 			Toast.makeText(Sing_up.this, "Usuário registrado com sucesso", Toast.LENGTH_SHORT).show();
 			// Optionally, navigate to another activity
+
+			Intent intent = new Intent(Sing_up.this, MainActivity.class);
+			startActivity(intent);
 		});
+
+
 
 
 	}
