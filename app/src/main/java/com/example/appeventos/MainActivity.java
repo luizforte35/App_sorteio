@@ -4,6 +4,7 @@ package com.example.appeventos;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -15,10 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.appeventos.data.forgot_password;
 
 public class MainActivity extends AppCompatActivity {
-
 	private Button loginButton;
 	private EditText email, password;
 	private TextView forgotPassword, signUp;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,51 +33,45 @@ public class MainActivity extends AppCompatActivity {
 		forgotPassword = findViewById(R.id.forgot_password);
 		signUp = findViewById(R.id.sign);
 
-		loginButton.setOnClickListener(v -> {
-			String emailText = email.getText().toString().trim();
-			String passwordText = password.getText().toString().trim();
-
-			if (emailText.isEmpty() || passwordText.isEmpty()) {
-				Toast.makeText(MainActivity.this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
-				return; // Exit early if fields are empty
-			}
-
-			if (isUserRegistered(emailText, passwordText)) { // Call the verification method
-				// Login successful
-				Intent intent = new Intent(MainActivity.this, Home.class);
-				startActivity(intent);
-			} else {
-				// Invalid credentials
-				Toast.makeText(MainActivity.this, "Email ou senha inválidos", Toast.LENGTH_SHORT).show();
-			}
-		});
-
-
-
-
-		signUp.setOnClickListener(v -> {
-			Intent intent = new Intent(MainActivity.this, Sing_up.class); // Changed class name
-			startActivity(intent);
-		});
-
-		forgotPassword.setOnClickListener(v -> {
-			Intent intent = new Intent(MainActivity.this, forgot_password.class); // Changed class name
-			startActivity(intent);
-		});
+		loginButton.setOnClickListener(v -> handleLogin());
+		signUp.setOnClickListener(v -> startActivity(new Intent(this, Sing_up.class)));
+		forgotPassword.setOnClickListener(v -> startActivity(new Intent(this, forgot_password.class)));
 	}
-	private boolean isUserRegistered(String email, String password) {
-		if (email.equals("john.mckinley@examplepetstore.com") && password.equals("password")) {
-			return true;
-			} else {
-			return false;
 
+	private void handleLogin() {
+		String emailText = email.getText().toString().trim();
+		String passwordText = password.getText().toString().trim();
 
-			// Add your own logic to check if the user is registered
-			// For example, you can check a database or shared preferences
-			// Return true if the user is registered, false otherwise
+		if (!isValidEmail(emailText)) {
+			showToast("Email inválido");
+			return;
+		}
 
+		if (emailText.isEmpty() || passwordText.isEmpty()) {
+			showToast("Por favor, preencha todos os campos");
+			return;
+		}
+
+		if (isUserRegistered(emailText, passwordText)) {
+			startActivity(new Intent(this, Home.class));
+		} else {
+			showToast("Email ou senha inválidos");
 		}
 	}
 
+	private boolean isValidEmail(String email) {
+		return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+	}
 
+	private void showToast(String message) {
+		Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+	}
+
+	private boolean isUserRegistered(String email, String password) {
+		// Lógica de verificação no banco de dados
+		return email.equals("john.mckinley@examplepetstore.com") && password.equals("password");
+	}
 }
+
+
+

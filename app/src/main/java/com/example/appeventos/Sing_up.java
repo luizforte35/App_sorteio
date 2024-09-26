@@ -14,6 +14,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.appeventos.BancoDeDados.DatabaseHelper;
+
 public class Sing_up extends AppCompatActivity {
 
 	private Button button;
@@ -63,13 +65,17 @@ public class Sing_up extends AppCompatActivity {
 				return;
 			}
 
-			// Here, you would add logic to save the user data (e.g., to a database or shared preferences)
-			Toast.makeText(Sing_up.this, "Usuário registrado com sucesso", Toast.LENGTH_SHORT).show();
-			// Optionally, navigate to another activity
+			// Salvar o usuário no banco de dados
+			DatabaseHelper dbHelper = new DatabaseHelper(Sing_up.this);
+			dbHelper.insertUser(email, password);
 
+			Toast.makeText(Sing_up.this, "Usuário registrado com sucesso", Toast.LENGTH_SHORT).show();
+
+			// Navegar para outra atividade
 			Intent intent = new Intent(Sing_up.this, MainActivity.class);
 			startActivity(intent);
 		});
+
 
 
 
